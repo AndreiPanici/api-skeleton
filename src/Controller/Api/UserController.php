@@ -1,17 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
-use Nelmio\ApiDocBundle\Annotation\Security;
-use Swagger\Annotations as SWG;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Entity\User;
+use App\Http\ApiResponse;
+use App\Services\UserServiceInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class UserController
+class UserController extends AbstractController
 {
 
     /**
@@ -25,28 +26,108 @@ class UserController
     private $serializer;
 
     /**
+     * @var UserServiceInterface
+     */
+    private $userService;
+
+    /**
      * @param ValidatorInterface $validator
      * @param SerializerInterface $serializer
+     * @param UserServiceInterface $userService
      */
-    public function __construct(ValidatorInterface $validator, SerializerInterface $serializer)
-    {
+    public function __construct(
+        ValidatorInterface $validator,
+        SerializerInterface $serializer,
+        UserServiceInterface $userService
+    ) {
         $this->validator = $validator;
         $this->serializer = $serializer;
+        $this->userService = $userService;
     }
 
     /**
-     * @Route("/api/home", name="home", methods={"GET"})
-     * @SWG\Response(
-     *     response=200,
-     *     description="Returns the rewards of an user",)
-     * )
-     * @SWG\Tag(name="User")
-     * @Security(name="Bearer")
-     * @param Request $request
+     * @Route("/api/user", name="get_user", methods={"GET"})
+     *
      * @return Response
      */
-    public function index(Request $request): Response
+    public function actionGet(): Response
     {
-        return new JsonResponse('hi');
+        return new ApiResponse(
+            json_decode($this->serializer->serialize($this->getUser(), 'json', ['groups' => 'details']))
+        );
+    }
+
+    /**
+     * @Route("/api/user", name="edit_user", methods={"PATCH"})
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function actionPatch(Request $request): Response
+    {
+        /** @var User $user */
+        $user = $this->serializer->deserialize(
+            $request->getContent(),
+            User::class,
+            'json',
+            [
+                'object_to_populate' => $this->getUser(),
+                'groups' => 'patch'
+            ]
+        );
+
+        $errors = $this->validator->validate($user);
+
+        $this->userService->update($user);
+
+        return new ApiResponse(
+            json_decode($this->serializer->serialize($user, 'json', ['groups' => 'details'])),
+            null,
+            []
+        );
+    }
+
+    /**
+     * @Route("/api/user", name="delete_user", methods={"DELETE"})
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function deleteAction(Request $request): Response
+    {
+        $this->userService->delete($this->getUser());
+
+        return new ApiResponse(
+            null,
+            null,
+            [],
+            Response::HTTP_NO_CONTENT
+        );
+    }
+
+    /**
+     * @Route("/api/register", name="register_user", methods={"POST"})
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function actionPost(Request $request): Response
+    {
+        /** @var User $user */
+        $user = $this->serializer->deserialize(
+            $request->getContent(),
+            User::class,
+            'json',
+            ['groups' => 'post']
+        );
+
+        //TODO return if errors
+        $errors = $this->validator->validate($user);
+
+        $this->userService->create($user);
+
+        return new ApiResponse(
+            json_decode($this->serializer->serialize($user, 'json', ['groups' => 'details']))
+        );
     }
 }

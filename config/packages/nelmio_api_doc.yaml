@@ -1,0 +1,112 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: Api-Skeleton
+            description: This is an api skeleton!
+            version: 1.0.0
+        securityDefinitions:
+            Bearer:
+                type: apiKey
+                description: 'Value: Bearer {jwt}'
+                name: Authorization
+                in: header
+        security:
+            - Bearer: []
+        paths:
+            /api/login:
+                post:
+                    tags:
+                        - Auth
+                    description: Login into the api.
+                    produces:
+                        - application/json
+                    parameters:
+                        - name: user
+                          description: User to login
+                          in: body
+                          required: true
+                          schema:
+                              type: object
+                              properties:
+                                  username:
+                                      type: string
+                                  password:
+                                      type: string
+                    responses:
+                        '200':
+                            description: Login successful
+                            schema:
+                                type: object
+                                properties:
+                                    token:
+                                        type: string
+                        '401':
+                            description: Invalid credentials
+                            schema:
+                                type: object
+                                properties:
+                                    code:
+                                        type: integer
+                                        example: 401
+                                    message:
+                                        type: string
+                                        example: Invalid credentials
+            /api/register:
+                post:
+                    tags:
+                        - Auth
+                    description: Register user into app.
+                    produces:
+                        - application/json
+                    parameters:
+                        - name: user
+                          description: User to register
+                          in: body
+                          required: true
+                          schema:
+                              type: object
+                              properties:
+                                  email:
+                                      type: string
+                                  password:
+                                      type: string
+            /api/user:
+                get:
+                    tags:
+                        - User
+                    description: Get user profile
+                    produces:
+                        - application/json
+                patch:
+                    tags:
+                        - User
+                    description: Edit user profile
+                    produces:
+                        - application/json
+                    parameters:
+                        - name: user
+                          description: Edit user profile
+                          in: body
+                          required: false
+                          schema:
+                              type: object
+                              properties:
+                                  first_name:
+                                      type: string
+                                      example: Lionel
+                                  last_name:
+                                      type: string
+                                      example: Messi
+                                  phone:
+                                      type: string
+                                      example: +40 752079181
+                delete:
+                    tags:
+                        - User
+                    description: Delete user
+                    produces:
+                        - application/json
+
+    areas: # to filter documented areas
+        path_patterns:
+            - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
