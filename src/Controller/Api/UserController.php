@@ -2,28 +2,19 @@
 
 namespace App\Controller\Api;
 
+use App\Constrain\User\PatchConstraint;
+use App\Constrain\User\PostConstraint;
 use App\Entity\User;
 use App\Http\ApiResponse;
 use App\Services\UserServiceInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class UserController extends AbstractController
+class UserController extends AbstractBaseController
 {
-
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
-
-    /**
-     * @var SerializerInterface
-     */
-    private $serializer;
 
     /**
      * @var UserServiceInterface
@@ -40,8 +31,8 @@ class UserController extends AbstractController
         SerializerInterface $serializer,
         UserServiceInterface $userService
     ) {
-        $this->validator = $validator;
-        $this->serializer = $serializer;
+        parent::__construct($serializer, $validator);
+
         $this->userService = $userService;
     }
 
@@ -53,7 +44,7 @@ class UserController extends AbstractController
     public function actionGet(): Response
     {
         return new ApiResponse(
-            json_decode($this->serializer->serialize($this->getUser(), 'json', ['groups' => 'details']))
+            json_decode($this->serializer->serialize($this->getUser(), self::RESPONSE_FORMAT, ['groups' => 'details']))
         );
     }
 
@@ -65,23 +56,33 @@ class UserController extends AbstractController
      */
     public function actionPatch(Request $request): Response
     {
+        $this->validateContentType($request->headers->get('content-type'));
+        $errors = $this->validator->validate(json_decode($request->getContent(), true), PatchConstraint::create());
+
+        if (0 < count($errors)) {
+            return new ApiResponse(
+                null,
+                'Invalid data',
+                $this->buildValidatorErrors($errors),
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
         /** @var User $user */
         $user = $this->serializer->deserialize(
             $request->getContent(),
             User::class,
-            'json',
+            self::RESPONSE_FORMAT,
             [
                 'object_to_populate' => $this->getUser(),
                 'groups' => 'patch'
             ]
         );
 
-        $errors = $this->validator->validate($user);
-
         $this->userService->update($user);
 
         return new ApiResponse(
-            json_decode($this->serializer->serialize($user, 'json', ['groups' => 'details'])),
+            json_decode($this->serializer->serialize($user, self::RESPONSE_FORMAT, ['groups' => 'details'])),
             null,
             []
         );
@@ -113,6 +114,18 @@ class UserController extends AbstractController
      */
     public function actionPost(Request $request): Response
     {
+        $this->validateContentType($request->headers->get('content-type'));
+        $errors = $this->validator->validate(json_decode($request->getContent(), true), PostConstraint::create());
+
+        if (0 < count($errors)) {
+            return new ApiResponse(
+                null,
+                'Invalid data',
+                $this->buildValidatorErrors($errors),
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
         /** @var User $user */
         $user = $this->serializer->deserialize(
             $request->getContent(),
@@ -121,13 +134,10 @@ class UserController extends AbstractController
             ['groups' => 'post']
         );
 
-        //TODO return if errors
-        $errors = $this->validator->validate($user);
-
         $this->userService->create($user);
 
         return new ApiResponse(
-            json_decode($this->serializer->serialize($user, 'json', ['groups' => 'details']))
+            json_decode($this->serializer->serialize($user, self::RESPONSE_FORMAT, ['groups' => 'details']))
         );
     }
 }

@@ -26,14 +26,14 @@ class ApiResponse extends JsonResponse
      * @param mixed  $data
      * @param array  $errors
      *
-     * @return array
+     * @@return mixed
      */
     private function format(string $message = null, $data = null, array $errors = [])
     {
         $response = [];
 
         if ($data !== null) {
-            $response['data'] = $data;
+            return $data;
         }
 
         if ($message) {

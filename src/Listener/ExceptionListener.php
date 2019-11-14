@@ -52,8 +52,10 @@ class ExceptionListener
 
         try {
             $errors = $normalizer ? $normalizer->normalize($exception) : [];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $errors = [];
+
+            return new ApiResponse(null, 'Something went wrong!', [], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return new ApiResponse(null, $exception->getMessage(), $errors, $statusCode);
