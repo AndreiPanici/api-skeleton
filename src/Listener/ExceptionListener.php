@@ -46,8 +46,10 @@ class ExceptionListener
     /**
      * @param ExceptionEvent $event
      * @throws \Throwable
+     *
+     * @return void
      */
-    public function onKernelException(ExceptionEvent $event)
+    public function onKernelException(ExceptionEvent $event): void
     {
         $exception = $event->getException();
         $request   = $event->getRequest();
