@@ -1,9 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Listener;
 
 use App\Factory\NormalizerFactory;
 use App\Http\ApiResponse;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -26,20 +27,27 @@ class ExceptionListener
     private $env;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * ExceptionListener constructor.
      *
      * @param NormalizerFactory $normalizerFactory
      * @param string $env
+     * @param LoggerInterface $logger
      */
-    public function __construct(NormalizerFactory $normalizerFactory, string $env)
+    public function __construct(NormalizerFactory $normalizerFactory, string $env, LoggerInterface $logger)
     {
         $this->normalizerFactory = $normalizerFactory;
         $this->env = $env;
+        $this->logger = $logger;
     }
 
     /**
      * @param ExceptionEvent $event
-     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @throws \Throwable
      */
     public function onKernelException(ExceptionEvent $event)
     {
@@ -55,17 +63,17 @@ class ExceptionListener
     /**
      * @param \Exception $exception
      * @return ApiResponse
-     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @throws \Throwable
      */
     private function createApiResponse(\Exception $exception)
     {
         $normalizer = $this->normalizerFactory->getNormalizer($exception);
         $statusCode = $exception instanceof HttpExceptionInterface ? $exception->getStatusCode() : Response::HTTP_INTERNAL_SERVER_ERROR;
-
         try {
             $errors = $normalizer ? $normalizer->normalize($exception) : [];
         } catch (\Throwable $e) {
             $errors = [];
+            $this->logger->error($exception);
 
         }
 
