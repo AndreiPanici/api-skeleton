@@ -127,6 +127,11 @@ class User implements UserInterface
         return (string) $this->password;
     }
 
+    /**
+     * @param string $password
+     *
+     * @return self
+     */
     public function setPassword(string $password): self
     {
         $this->password = $password;

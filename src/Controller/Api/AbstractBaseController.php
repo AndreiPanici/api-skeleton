@@ -46,6 +46,8 @@ class AbstractBaseController extends AbstractController
 
     /**
      * @param string $contentType
+     *
+     * @return void
      */
     protected function validateContentType(string $contentType): void
     {
@@ -60,8 +62,10 @@ class AbstractBaseController extends AbstractController
     /**
      * @param string $data
      * @param string $model
+     *
+     * @return void
      */
-    protected function validateRequestData(string $data, string $model)
+    protected function validateRequestData(string $data, string $model): void
     {
         $this->data = $this->serializer->deserialize($data, $model, self::RESPONSE_FORMAT);
 
@@ -69,12 +73,11 @@ class AbstractBaseController extends AbstractController
         if ($errors->count() > 0) {
             throw new ValidationException($this->createErrorMessage($errors), Response::HTTP_BAD_REQUEST);
         }
-
-
     }
 
     /**
      * @param ConstraintViolationListInterface $validatorErrors
+     *
      * @return array
      */
     protected function buildValidatorErrors(ConstraintViolationListInterface $validatorErrors): array
@@ -95,6 +98,7 @@ class AbstractBaseController extends AbstractController
 
     /**
      * @param ConstraintViolationListInterface $violations
+     *
      * @return string
      */
     private function createErrorMessage(ConstraintViolationListInterface $violations): string

@@ -32,8 +32,6 @@ class ExceptionListener
     private $logger;
 
     /**
-     * ExceptionListener constructor.
-     *
      * @param NormalizerFactory $normalizerFactory
      * @param string $env
      * @param LoggerInterface $logger
@@ -62,8 +60,9 @@ class ExceptionListener
 
     /**
      * @param \Exception $exception
-     * @return ApiResponse
      * @throws \Throwable
+     *
+     * @return ApiResponse
      */
     private function createApiResponse(\Exception $exception)
     {
@@ -74,7 +73,6 @@ class ExceptionListener
         } catch (\Throwable $e) {
             $errors = [];
             $this->logger->error($exception);
-
         }
 
         return new ApiResponse(null, $exception->getMessage(), $errors, $statusCode);

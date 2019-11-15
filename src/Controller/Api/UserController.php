@@ -32,7 +32,6 @@ class UserController extends AbstractBaseController
         UserServiceInterface $userService
     ) {
         parent::__construct($serializer, $validator);
-
         $this->userService = $userService;
     }
 

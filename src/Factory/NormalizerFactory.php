@@ -12,8 +12,6 @@ class NormalizerFactory
     private $normalizers;
 
     /**
-     * NormalizerFactory constructor.
-     *
      * @param iterable $normalizers
      */
     public function __construct(iterable $normalizers)
