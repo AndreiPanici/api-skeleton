@@ -11,18 +11,30 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 class ExceptionListener
 {
     /**
+     * @var string
+     */
+    const DEV_ENV = 'dev';
+
+    /**
      * @var NormalizerFactory
      */
     private $normalizerFactory;
 
     /**
+     * @var string
+     */
+    private $env;
+
+    /**
      * ExceptionListener constructor.
      *
      * @param NormalizerFactory $normalizerFactory
+     * @param string $env
      */
-    public function __construct(NormalizerFactory $normalizerFactory)
+    public function __construct(NormalizerFactory $normalizerFactory, string $env)
     {
         $this->normalizerFactory = $normalizerFactory;
+        $this->env = $env;
     }
 
     /**
@@ -55,7 +67,6 @@ class ExceptionListener
         } catch (\Throwable $e) {
             $errors = [];
 
-            return new ApiResponse(null, 'Something went wrong!', [], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return new ApiResponse(null, $exception->getMessage(), $errors, $statusCode);

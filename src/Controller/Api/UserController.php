@@ -2,8 +2,8 @@
 
 namespace App\Controller\Api;
 
-use App\Constrain\User\PatchConstraint;
-use App\Constrain\User\PostConstraint;
+use App\Constraint\User\PatchConstraint;
+use App\Constraint\User\PostConstraint;
 use App\Entity\User;
 use App\Http\ApiResponse;
 use App\Services\UserServiceInterface;
