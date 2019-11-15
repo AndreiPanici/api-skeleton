@@ -8,6 +8,8 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Throwable;
+use Exception;
 
 class ExceptionListener
 {
@@ -45,7 +47,7 @@ class ExceptionListener
 
     /**
      * @param ExceptionEvent $event
-     * @throws \Throwable
+     * @throws Throwable
      *
      * @return void
      */
@@ -61,18 +63,20 @@ class ExceptionListener
     }
 
     /**
-     * @param \Exception $exception
-     * @throws \Throwable
+     * @param Exception $exception
+     * @throws Throwable
      *
      * @return ApiResponse
      */
-    private function createApiResponse(\Exception $exception)
+    private function createApiResponse(Exception $exception)
     {
         $normalizer = $this->normalizerFactory->getNormalizer($exception);
-        $statusCode = $exception instanceof HttpExceptionInterface ? $exception->getStatusCode() : Response::HTTP_INTERNAL_SERVER_ERROR;
+        $statusCode = $exception instanceof HttpExceptionInterface ?
+            $exception->getStatusCode() : Response::HTTP_INTERNAL_SERVER_ERROR;
+
         try {
             $errors = $normalizer ? $normalizer->normalize($exception) : [];
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $errors = [];
             $this->logger->error($exception);
         }

@@ -12,7 +12,7 @@ class PatchConstraint
     /**
      * @return Constraint
      */
-    static function create(): Constraint
+    public static function create(): Constraint
     {
         return new Collection(
             [

@@ -67,9 +67,9 @@ class AbstractBaseController extends AbstractController
      */
     protected function validateRequestData(string $data, string $model): void
     {
-        $this->data = $this->serializer->deserialize($data, $model, self::RESPONSE_FORMAT);
+        $result = $this->serializer->deserialize($data, $model, self::RESPONSE_FORMAT);
 
-        $errors = $this->validator->validate($this->data);
+        $errors = $this->validator->validate($result);
         if ($errors->count() > 0) {
             throw new ValidationException($this->createErrorMessage($errors), Response::HTTP_BAD_REQUEST);
         }

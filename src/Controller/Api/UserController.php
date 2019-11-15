@@ -89,13 +89,14 @@ class UserController extends AbstractBaseController
 
     /**
      * @Route("/api/user", name="delete_user", methods={"DELETE"})
-     * @param Request $request
      *
      * @return Response
      */
-    public function deleteAction(Request $request): Response
+    public function deleteAction(): Response
     {
-        $this->userService->delete($this->getUser());
+        /** @var User $loggedUser */
+        $loggedUser = $this->getUser();
+        $this->userService->delete($loggedUser);
 
         return new ApiResponse(
             null,
