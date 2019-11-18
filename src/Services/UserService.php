@@ -57,4 +57,12 @@ class UserService implements UserServiceInterface
     {
         $this->userRepository->remove($user);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setUserRole(User $user): void
+    {
+        $user->setRoles([User::USER_ROLE]);
+    }
 }

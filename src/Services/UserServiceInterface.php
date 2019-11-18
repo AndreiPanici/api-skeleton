@@ -26,4 +26,11 @@ interface UserServiceInterface
      * @return void
      */
     public function delete(User $user): void;
+
+    /**
+     * @param User $user
+     *
+     * @return void
+     */
+    public function setUserRole(User $user): void;
 }

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -12,11 +13,18 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class User implements UserInterface
 {
+
     /**
-     * @var integer|null
+     * @var string
+     */
+    public const USER_ROLE = 'ROLE_USER';
+
+    /**
+     * @var UuidInterface|null
      * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+     * @ORM\Column(type="uuid", length=255, unique=true)
      * @Groups({"details"})
      */
     private $id;
@@ -63,9 +71,9 @@ class User implements UserInterface
     private $phone;
 
     /**
-     * @return integer|null
+     * @return UuidInterface|null
      */
-    public function getId(): ?int
+    public function getId(): ?UuidInterface
     {
         return $this->id;
     }

@@ -134,6 +134,7 @@ class UserController extends AbstractBaseController
             ['groups' => 'post']
         );
 
+        $this->userService->setUserRole($user);
         $this->userService->create($user);
 
         return new ApiResponse(
