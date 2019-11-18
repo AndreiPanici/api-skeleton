@@ -1,4 +1,4 @@
-#Api-skeleton
+###Api-skeleton
 Symfony 4 api-skeleton.
 
 A simple api skeleton for basic REST API using symfony flex.
