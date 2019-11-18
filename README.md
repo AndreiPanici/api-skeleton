@@ -23,6 +23,6 @@ openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout`
 
 To run the server: `symfony server:start`
 
-## Test 
+## Tests 
 
 Run all tests: `php bin/phpunit`
