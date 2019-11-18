@@ -6,7 +6,7 @@ use App\Constraint\User\PatchConstraint;
 use App\Constraint\User\PostConstraint;
 use App\Entity\User;
 use App\Http\ApiResponse;
-use App\Services\UserServiceInterface;
+use App\Service\UserServiceInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
