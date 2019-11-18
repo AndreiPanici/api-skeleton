@@ -15,3 +15,7 @@ Used packages:
 `bin/console doctrine:migrations:generate`
 
 To run the server: `symfony server:start`
+
+## Test 
+
+Run all tests: `php bin/phpunit`
