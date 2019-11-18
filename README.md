@@ -1,4 +1,4 @@
-###Api-skeleton
+## Api-skeleton
 Symfony 4 api-skeleton.
 
 A simple api skeleton for basic REST API using symfony flex.
@@ -8,7 +8,7 @@ Used packages:
 - uuid
 - nelmio api doc
 
-### Setup
+## Setup
  
 `composer install`
 
