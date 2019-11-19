@@ -13,6 +13,28 @@ nelmio_api_doc:
         security:
             - Bearer: []
         paths:
+            /api/admin/user/list:
+                get:
+                    tags:
+                        - Admin
+                    description: Get user list
+                    produces:
+                        - application/json
+                    parameters:
+                        - name: order_by
+                          description: The field to order
+                          in: query
+                        - name: page
+                          description: Page number
+                          in: query
+                          type: integer
+                        - name: order_direction
+                          description: ASC or DESC
+                          in: query
+                        - name: limit
+                          type: integer
+                          in: query
+                          description: Number of user per page
             /api/login:
                 post:
                     tags:
@@ -106,6 +128,7 @@ nelmio_api_doc:
                     description: Delete user
                     produces:
                         - application/json
+
 
     areas: # to filter documented areas
         path_patterns:

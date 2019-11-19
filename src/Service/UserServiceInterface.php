@@ -3,6 +3,8 @@
 namespace App\Service;
 
 use App\Entity\User;
+use App\Search\UserSearch;
+use Pagerfanta\Pagerfanta;
 
 interface UserServiceInterface
 {
@@ -33,4 +35,11 @@ interface UserServiceInterface
      * @return void
      */
     public function setUserRole(User $user): void;
+
+    /**
+     * @param UserSearch $userSearch
+     *
+     * @return Pagerfanta
+     */
+    public function getUserList(UserSearch $userSearch): Pagerfanta;
 }

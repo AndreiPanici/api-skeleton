@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Repository\UserRepositoryInterface;
+use App\Search\UserSearch;
+use Pagerfanta\Pagerfanta;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserService implements UserServiceInterface
@@ -64,5 +66,13 @@ class UserService implements UserServiceInterface
     public function setUserRole(User $user): void
     {
         $user->setRoles([User::USER_ROLE]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUserList(UserSearch $userSearch): Pagerfanta
+    {
+        return $this->userRepository->search($userSearch);
     }
 }

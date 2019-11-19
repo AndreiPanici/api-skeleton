@@ -9,6 +9,7 @@
         "friendsofsymfony/rest-bundle": "^2.6",
         "lexik/jwt-authentication-bundle": "^2.6",
         "nelmio/api-doc-bundle": "^3.4",
+        "pagerfanta/pagerfanta": "^2.1",
         "ramsey/uuid-doctrine": "^1.5",
         "symfony/asset": "4.3.*",
         "symfony/console": "4.3.*",

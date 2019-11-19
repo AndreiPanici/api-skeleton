@@ -14,8 +14,14 @@ class ApiResponse extends JsonResponse
      * @param array  $headers
      * @param bool   $json
      */
-    public function __construct($data = null, $message = null, array $errors = [], int $status = 200, array $headers = [], bool $json = false)
-    {
+    public function __construct(
+        $data = null,
+        $message = null,
+        array $errors = [],
+        int $status = 200,
+        array $headers = [],
+        bool $json = false
+    ) {
         parent::__construct($this->format($message, $data, $errors), $status, $headers, $json);
     }
 

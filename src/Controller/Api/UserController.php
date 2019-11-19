@@ -5,7 +5,6 @@ namespace App\Controller\Api;
 use App\Constraint\User\PatchConstraint;
 use App\Constraint\User\PostConstraint;
 use App\Entity\User;
-use App\Http\ApiResponse;
 use App\Service\UserServiceInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,7 +41,7 @@ class UserController extends AbstractBaseController
      */
     public function actionGet(): Response
     {
-        return new ApiResponse(
+        return $this->createApiResponse(
             json_decode($this->serializer->serialize($this->getUser(), self::RESPONSE_FORMAT, ['groups' => 'details']))
         );
     }
@@ -59,7 +58,7 @@ class UserController extends AbstractBaseController
         $errors = $this->validator->validate(json_decode($request->getContent(), true), PatchConstraint::create());
 
         if (0 < count($errors)) {
-            return new ApiResponse(
+            return $this->createApiResponse(
                 null,
                 'Invalid data',
                 $this->buildValidatorErrors($errors),
@@ -80,7 +79,7 @@ class UserController extends AbstractBaseController
 
         $this->userService->update($user);
 
-        return new ApiResponse(
+        return $this->createApiResponse(
             json_decode($this->serializer->serialize($user, self::RESPONSE_FORMAT, ['groups' => 'details'])),
             null,
             []
@@ -98,7 +97,7 @@ class UserController extends AbstractBaseController
         $loggedUser = $this->getUser();
         $this->userService->delete($loggedUser);
 
-        return new ApiResponse(
+        return $this->createApiResponse(
             null,
             null,
             [],
@@ -118,7 +117,7 @@ class UserController extends AbstractBaseController
         $errors = $this->validator->validate(json_decode($request->getContent(), true), PostConstraint::create());
 
         if (0 < count($errors)) {
-            return new ApiResponse(
+            return $this->createApiResponse(
                 null,
                 'Invalid data',
                 $this->buildValidatorErrors($errors),
@@ -137,7 +136,7 @@ class UserController extends AbstractBaseController
         $this->userService->setUserRole($user);
         $this->userService->create($user);
 
-        return new ApiResponse(
+        return $this->createApiResponse(
             json_decode($this->serializer->serialize($user, self::RESPONSE_FORMAT, ['groups' => 'details']))
         );
     }

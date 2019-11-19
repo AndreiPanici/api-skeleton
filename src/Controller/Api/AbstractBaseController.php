@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Exception\ValidationException;
+use App\Http\ApiResponse;
 use Doctrine\Common\Inflector\Inflector;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,6 +43,34 @@ class AbstractBaseController extends AbstractController
     {
         $this->serializer = $serializer;
         $this->validator = $validator;
+    }
+
+    /**
+     * @param null $data
+     * @param null $message
+     * @param array $errors
+     * @param int $status
+     * @param array $headers
+     * @param bool $json
+     * @return ApiResponse
+     */
+    protected function createApiResponse(
+        $data = null,
+        $message = null,
+        array $errors = [],
+        int $status = 200,
+        array $headers = [],
+        bool $json = false
+    ) {
+
+        return new ApiResponse(
+            $data,
+            $message,
+            $errors,
+            $status,
+            $headers,
+            $json
+        );
     }
 
     /**
