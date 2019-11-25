@@ -59,8 +59,6 @@ class AdminController extends AbstractBaseController
             );
         }
 
-        $queryParams['offset'] = $queryParams['page'] * $queryParams['limit'] / $queryParams['limit'];
-
         /** @var UserSearch $userSearch */
         $userSearch = $this->serializer->deserialize(
             json_encode($queryParams),
@@ -80,7 +78,7 @@ class AdminController extends AbstractBaseController
         return $this->createApiResponse(
             [
                 'total' => $paginator->getNbResults(),
-                'page' => $paginator->getCurrentPage(),
+                'current_page' => $paginator->getCurrentPage(),
                 'num_pages' => $paginator->getNbPages(),
                 'items_per_page' => $paginator->getMaxPerPage(),
                 'users' => $users
