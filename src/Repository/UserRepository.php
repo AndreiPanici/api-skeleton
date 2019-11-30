@@ -4,15 +4,15 @@ namespace App\Repository;
 
 use App\Entity\User;
 use App\Search\UserSearch;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Pagerfanta\Pagerfanta;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class UserRepository extends AbstractRepository implements UserRepositoryInterface
 {
     /**
-     * @param RegistryInterface $registry
+     * @param ManagerRegistry $registry
      */
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
     }
